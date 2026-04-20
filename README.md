@@ -1,11 +1,47 @@
-<div align="center">
+# MYK Soft Landing Page
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+![MYK Soft](public/og-image.jpg)
 
-  <h1>Built with AI Studio</h2>
+MYK Soft bireysel yazılım girişiminin resmi portfolyo ve lansman sayfası. Modern, performans odaklı ve SEO uyumlu mimarisiyle, potansiyel müşterilere Web, Mobil ve Masaüstü çözümleri sunar.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## 🚀 Teknolojiler
+- **Framework:** React + Vite
+- **Stil:** Tailwind CSS (v4)
+- **Animasyon:** Framer Motion
+- **İkonlar:** Lucide React
+- **Optimizasyon:** Tam SEO ve A11y entegrasyonu, JSON-LD Schema.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## 💻 Yerel Kurulum (Local Development)
 
-</div>
+Projeyi kendi bilgisayarınızda çalıştırmak için:
+
+```bash
+# 1. Repoyu klonlayın
+git clone https://github.com/MYKSoft/myksoft-website.git
+
+# 2. Dizin içerisine girin
+cd myksoft-website
+
+# 3. Bağımlılıkları yükleyin
+npm install
+
+# 4. Geliştirme sunucusunu başlatın
+npm run dev
+```
+
+## 🌐 Dağıtım (Deployment)
+
+Proje Vercel ile optimize edilmiştir. `vercel.json` içerisinde tüm SPA yönlendirmeleri, Header ve Cache kuralları tanımlıdır.
+
+Aşağıdaki butona tıklayarak tek tıkla kendi Vercel hesabınıza dağıtabilirsiniz:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FMYKSoft%2Fmyksoft-website)
+
+## 🔒 Otomatik Optimizasyonlar
+- GitHub Dependabot: Haftalık bağımlılık güncellemeleri açık.
+- Vercel Assets Cache: Asset klasörü altındaki statik dosyalar 1 yıl süreyle tarayıcıda önbelleğe (Immutable) alınır.
+- Security Headers: XSS ve Frame saldırılarına karşı default güvenli başlıklar entegrelidir.
+
+## 📄 Lisans
+
+Bu proje, açık kaynaklı [MIT Lisansı](LICENSE) kapsamında lisanslanmıştır. Kodlar özgürce kullanılabilir, değiştirilebilir ve dağıtılabilir. Telif hakkı (c) 2026 Mustafa Yaşar KAR (MYK Soft) aittir.
