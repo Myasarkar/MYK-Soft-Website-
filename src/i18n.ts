@@ -6,7 +6,7 @@ export const translations = {
     services: 'Hizmetler',
     apps: 'Uygulamalar',
     contact: 'İletişim',
-    heroTag: 'Bireysel Yazılım Girişimi',
+    heroTag: 'Bağımsız Yazılım Stüdyosu',
     heroDescription: 'MYK Soft, karmaşık iş süreçlerinizi analiz ederek size özel, ölçeklenebilir ve modern Website, Mobil ve Masaüstü yazılım çözümleri sunar.',
     discoverServices: 'Hizmetleri Keşfet',
     discussProject: 'Projeyi Konuşalım',
@@ -46,7 +46,15 @@ export const translations = {
     faq3A: 'Tüm faturalandırma ve teslimat tamamlandığında projenin kaynak kodları sizin mülkiyetinize geçer ve GitHub/GitLab üzerinden eksiksiz size teslim edilir.',
     footerReady: 'Birlikte Yeni Bir Başarı Hikayesi Yazmaya Hazır Mısınız?',
     footerDesc: 'Fikrinizi hayata geçirmek için buradayız. İhtiyaçlarınızı analiz edip size özel çözümler sunalım.',
-    contactUs: 'Bize Ulaşın'
+    contactUs: 'Bize Ulaşın',
+    cmdSearchPlaceholder: 'Komut yazın veya arama yapın...',
+    cmdEnglish: 'İngilizceye Çevir (Switch to English)',
+    cmdTurkish: 'Türkçeye Çevir',
+    cmdContact: 'Hızlı İletişime Geç',
+    cmdGithub: 'GitHub Profiline Git',
+    cmdTheme: 'Tema: Matrix/Terminal Modu',
+    cmdEmpty: 'Uyumlu eylem bulunamadı.',
+    cmdPaletteTitle: 'Geliştirici Menüsü'
   },
   EN: {
     about: 'About Us',
@@ -93,6 +101,14 @@ export const translations = {
     faq3A: 'Once all billing and delivery phases are completed, the source code becomes your property and is transferred to you securely via GitHub/GitLab.',
     footerReady: 'Ready To Write A New Success Story Together?',
     footerDesc: 'We are here to bring your ideas to life. Let us analyze your needs and offer a tailored solution.',
-    contactUs: 'Contact Us'
+    contactUs: 'Contact Us',
+    cmdSearchPlaceholder: 'Type a command or search...',
+    cmdEnglish: 'Switch to English',
+    cmdTurkish: 'Türkçeye Çevir (Switch to Turkish)',
+    cmdContact: 'Quick Contact',
+    cmdGithub: 'Go to GitHub Profile',
+    cmdTheme: 'Theme: Matrix/Terminal Mode',
+    cmdEmpty: 'No matching action found.',
+    cmdPaletteTitle: 'Developer Menu'
   }
 };

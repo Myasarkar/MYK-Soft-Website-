@@ -16,7 +16,10 @@ import {
   X,
   Star,
   Plus,
-  Minus
+  Minus,
+  Search,
+  Command as CommandIcon,
+  Code
 } from 'lucide-react';
 import { translations, LocaleType } from './i18n';
 
@@ -101,7 +104,13 @@ function FAQItem({ question, answer }: { question: string, answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border border-neutral-800 bg-neutral-900/50 rounded-2xl overflow-hidden hover:bg-neutral-900 transition-colors">
-      <button onClick={() => setIsOpen(!isOpen)} className="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none">
+      <button 
+        onClick={() => {
+          if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(10);
+          setIsOpen(!isOpen);
+        }} 
+        className="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none"
+      >
         <span className="font-semibold text-white">{question}</span>
         {isOpen ? <Minus className="w-5 h-5 text-indigo-400 shrink-0" /> : <Plus className="w-5 h-5 text-neutral-500 shrink-0" />}
       </button>
@@ -126,12 +135,121 @@ export default function App() {
   const [locale, setLocale] = useState<LocaleType>('TR');
   const t = translations[locale];
 
+  // Command Palette State
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [commandQuery, setCommandQuery] = useState('');
+  
+  // Matrix (Easter Egg) State
+  const [isMatrixMode, setIsMatrixMode] = useState(false);
+
+  // Mobile UX: Scroll State for Dynamic Island
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Mobile UX: Tilt state for gyroscope background effect
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  // Haptic feedback utility
+  const triggerHaptic = (duration = 15) => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(duration);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.gamma !== null && e.beta !== null) {
+        // Limit movement to avoid extreme shifts
+        const x = Math.min(Math.max(e.gamma, -45), 45);
+        const y = Math.min(Math.max(e.beta - 45, -45), 45);
+        // Add dynamic CSS variables to the root document mapped to tilt
+        document.documentElement.style.setProperty('--tilt-x', `${x * 1.5}px`);
+        document.documentElement.style.setProperty('--tilt-y', `${y * 1.5}px`);
+        setTilt({ x: x * 1.5, y: y * 1.5 });
+      }
+    };
+    window.addEventListener('deviceorientation', handleOrientation);
+    return () => window.removeEventListener('deviceorientation', handleOrientation);
+  }, []);
+
+  // Keyboard Event Listener for Command Palette (Cmd+K / Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+      if (e.key === 'Escape') {
+        setIsCommandPaletteOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Filtered Commands
+  const commands = [
+    { id: 'en', label: t.cmdEnglish, icon: <Globe className="w-5 h-5" />, action: () => { triggerHaptic(); setLocale('EN'); setIsCommandPaletteOpen(false); setCommandQuery(''); } },
+    { id: 'tr', label: t.cmdTurkish, icon: <Globe className="w-5 h-5" />, action: () => { triggerHaptic(); setLocale('TR'); setIsCommandPaletteOpen(false); setCommandQuery(''); } },
+    { id: 'contact', label: t.cmdContact, icon: <Monitor className="w-5 h-5" />, action: () => { triggerHaptic(); window.location.href='#iletisim'; setIsCommandPaletteOpen(false); setCommandQuery(''); } },
+    { id: 'github', label: t.cmdGithub, icon: <Github className="w-5 h-5" />, action: () => { triggerHaptic(); window.open('https://github.com/MYKSoft', '_blank'); setIsCommandPaletteOpen(false); setCommandQuery(''); } },
+    { id: 'theme', label: t.cmdTheme, icon: <Code className="w-5 h-5" />, action: () => { triggerHaptic(30); setIsMatrixMode(!isMatrixMode); setIsCommandPaletteOpen(false); setCommandQuery(''); } }
+  ];
+
+  const filteredCommands = commands.filter(c => c.label.toLowerCase().includes(commandQuery.toLowerCase()));
+
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
-      {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-neutral-950/80 backdrop-blur-lg border-b border-neutral-800">
+    <div className="min-h-screen bg-neutral-950 text-neutral-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden relative">
+      {/* Easter Egg: Matrix Mode Base Styles */}
+      {isMatrixMode && (
+        <style dangerouslySetInnerHTML={{__html: `
+          * {
+            font-family: 'Courier New', Courier, monospace !important;
+          }
+          body, .bg-neutral-950, .bg-neutral-900, .bg-neutral-900\\/40, .bg-neutral-900\\/50, .bg-neutral-950\\/80, .bg-neutral-900\\/95 {
+            background-color: #000000 !important;
+          }
+          div, span, p, h1, h2, h3, a, button, input {
+            color: #00FF41 !important;
+          }
+          .border-neutral-800, .border-neutral-700, .border-neutral-900, .border-indigo-500\\/20, .border-white\\/10 {
+            border-color: #003B00 !important;
+          }
+          svg {
+            color: #00FF41 !important;
+          }
+          .bg-indigo-600, .bg-\\[\\#1864D1\\] {
+            background-color: #003B00 !important;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4) !important;
+          }
+          .text-indigo-400, .text-cyan-400, .text-indigo-500 {
+            color: #00FF41 !important;
+          }
+          .bg-indigo-500\\/10, .bg-indigo-600\\/10, .bg-cyan-600\\/10, .bg-indigo-600\\/20 {
+            background-color: rgba(0, 255, 65, 0.1) !important;
+          }
+          ::selection {
+            background: rgba(0, 255, 65, 0.3) !important;
+          }
+        `}} />
+      )}
+
+      {/* Navigation - Dynamic Island on Mobile */}
+      <nav 
+        className={`fixed z-50 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] backdrop-blur-xl shrink-0
+        ${isScrolled 
+          ? 'top-4 left-4 right-4 md:top-0 md:left-0 md:right-0 md:w-full md:rounded-none rounded-[2rem] bg-neutral-900/95 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.8)]' 
+          : 'top-0 left-0 right-0 w-full bg-neutral-950/80 border-b border-neutral-800'}`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16 md:h-20">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 bg-[#1864D1] rounded-lg flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(24,100,209,0.4)]">
                 <MYKLogo className="w-6 h-6 text-white" />
@@ -150,7 +268,7 @@ export default function App() {
                
                {/* Language Toggle */}
                <button 
-                 onClick={() => setLocale(locale === 'TR' ? 'EN' : 'TR')}
+                 onClick={() => { triggerHaptic(); setLocale(locale === 'TR' ? 'EN' : 'TR'); }}
                  className="flex items-center gap-1 rounded-full bg-neutral-900 border border-neutral-700 px-3 py-1 hover:bg-neutral-800 transition-colors ml-2"
                >
                  <span className={locale === 'TR' ? 'text-white font-bold' : ''}>TR</span>
@@ -161,12 +279,28 @@ export default function App() {
                <a href="#iletisim" className="px-5 py-2 bg-neutral-900 border border-neutral-700 rounded-full text-white hover:bg-neutral-800 transition-colors">
                  {t.contact}
                </a>
+
+               {/* Command Palette Trigger (Desktop) */}
+               <button 
+                 onClick={() => { triggerHaptic(); setIsCommandPaletteOpen(true); }}
+                 className="flex items-center gap-2 rounded-full bg-neutral-900 border border-neutral-700 px-3 py-1.5 hover:bg-neutral-800 transition-colors text-neutral-400 focus:outline-none"
+               >
+                 <CommandIcon className="w-3.5 h-3.5" />
+                 <span className="text-[10px] font-bold tracking-widest uppercase">CMD + K</span>
+               </button>
             </div>
 
-            {/* Mobile Menu Toggle & Lang (Mobile) */}
-            <div className="md:hidden flex items-center gap-4">
+            {/* Mobile Menu Toggle & Command Trigger (Mobile) */}
+            <div className="md:hidden flex items-center gap-2 sm:gap-3">
               <button 
-                 onClick={() => setLocale(locale === 'TR' ? 'EN' : 'TR')}
+                 onClick={() => { triggerHaptic(); setIsCommandPaletteOpen(true); }}
+                 className="p-1.5 text-neutral-400 hover:text-white transition-colors"
+                 aria-label="Search Commands"
+               >
+                 <Search className="w-5 h-5" />
+               </button>
+              <button 
+                 onClick={() => { triggerHaptic(); setLocale(locale === 'TR' ? 'EN' : 'TR'); }}
                  className="flex items-center gap-1 rounded-md bg-neutral-900 border border-neutral-800 px-2 py-1 text-xs"
                >
                  <span className={locale === 'TR' ? 'text-white font-bold' : 'text-neutral-500'}>TR</span>
@@ -174,8 +308,8 @@ export default function App() {
                  <span className={locale === 'EN' ? 'text-white font-bold' : 'text-neutral-500'}>EN</span>
                </button>
               <button 
-                className="p-1 text-neutral-400 hover:text-white transition-colors"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-1.5 text-neutral-400 hover:text-white transition-colors"
+                onClick={() => { triggerHaptic(); setIsMobileMenuOpen(!isMobileMenuOpen); }}
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -192,15 +326,15 @@ export default function App() {
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden border-b border-neutral-800 bg-neutral-950/95 backdrop-blur-xl overflow-hidden"
             >
-              <div className="px-4 py-8 flex flex-col gap-4 text-center">
-                <a href="#hakkimizda" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2">{t.about}</a>
-                <a href="#hizmetler" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2">{t.services}</a>
-                <a href="#uygulamalar" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2">{t.apps}</a>
-                <a href="https://github.com/MYKSoft" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2 flex items-center justify-center gap-2">
+              <div className="px-4 py-8 flex flex-col gap-4 text-center mt-2">
+                <a href="#hakkimizda" onClick={() => { triggerHaptic(); setIsMobileMenuOpen(false); }} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2">{t.about}</a>
+                <a href="#hizmetler" onClick={() => { triggerHaptic(); setIsMobileMenuOpen(false); }} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2">{t.services}</a>
+                <a href="#uygulamalar" onClick={() => { triggerHaptic(); setIsMobileMenuOpen(false); }} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2">{t.apps}</a>
+                <a href="https://github.com/MYKSoft" target="_blank" rel="noopener noreferrer" onClick={() => { triggerHaptic(); setIsMobileMenuOpen(false); }} className="text-lg font-medium text-neutral-300 hover:text-white transition-colors py-2 flex items-center justify-center gap-2">
                   <Github className="w-5 h-5" /> GitHub
                 </a>
                 <div className="pt-6 mt-2 border-t border-neutral-800">
-                  <a href="#iletisim" onClick={() => setIsMobileMenuOpen(false)} className="inline-flex w-full justify-center px-5 py-4 bg-indigo-600 rounded-full text-white font-bold hover:bg-indigo-500 transition-colors shadow-[0_0_20px_rgba(79,70,229,0.4)]">
+                  <a href="#iletisim" onClick={() => { triggerHaptic(); setIsMobileMenuOpen(false); }} className="inline-flex w-full justify-center px-5 py-4 bg-indigo-600 rounded-full text-white font-bold hover:bg-indigo-500 transition-colors shadow-[0_0_20px_rgba(79,70,229,0.4)]">
                     {t.contact}
                   </a>
                 </div>
@@ -214,7 +348,10 @@ export default function App() {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-transparent">
         {/* Abstract Dark Tech Background */}
-        <div className="absolute inset-0 z-0 opacity-20">
+        <div 
+          className="absolute inset-0 z-0 opacity-20 transition-transform duration-75 ease-linear"
+          style={{ transform: `translate(var(--tilt-x, 0px), var(--tilt-y, 0px))` }}
+        >
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
         </div>
 
@@ -471,7 +608,7 @@ export default function App() {
                     </AnimatePresence>
 
                     <button 
-                      onClick={(e) => { e.preventDefault(); setIsAgAnaliziExpanded(!isAgAnaliziExpanded); }}
+                      onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsAgAnaliziExpanded(!isAgAnaliziExpanded); }}
                       className="text-cyan-400 hover:text-cyan-300 font-bold text-xs uppercase tracking-wider transition-colors focus:outline-none flex items-center gap-1 mt-2"
                     >
                       {isAgAnaliziExpanded ? t.showLess : t.readMore}
@@ -504,8 +641,14 @@ export default function App() {
 
       {/* Contact / CTA */}
       <section id="iletisim" className="py-24 bg-neutral-900 border-t border-neutral-800 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl opacity-50" />
-        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-600/10 rounded-full blur-3xl opacity-50" />
+        <div 
+          className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl opacity-50 transition-transform duration-75" 
+          style={{ transform: `translate(var(--tilt-x, 0px), var(--tilt-y, 0px))` }} 
+        />
+        <div 
+          className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-600/10 rounded-full blur-3xl opacity-50 transition-transform duration-75" 
+          style={{ transform: `translate(calc(var(--tilt-x, 0px) * -1), calc(var(--tilt-y, 0px) * -1))` }} 
+        />
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{t.footerReady}</h2>
@@ -542,6 +685,63 @@ export default function App() {
             </div>
         </div>
       </footer>
+
+      {/* Command Palette Modal */}
+      <AnimatePresence>
+        {isCommandPaletteOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCommandPaletteOpen(false)}
+              className="fixed inset-0 z-[100] bg-neutral-950/80 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="fixed top-[10%] md:top-[15%] left-1/2 -translate-x-1/2 w-full max-w-lg z-[101] px-4 sm:px-0"
+            >
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-800 bg-neutral-950/50">
+                  <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{t.cmdPaletteTitle}</span>
+                  <div className="text-[10px] font-bold bg-neutral-800 px-2 py-0.5 rounded text-neutral-400">ESC</div>
+                </div>
+                <div className="flex items-center px-4 py-4 border-b border-neutral-800 text-neutral-400">
+                  <Search className="w-5 h-5 mr-3 shrink-0 text-indigo-400" />
+                  <input 
+                    type="text" 
+                    placeholder={t.cmdSearchPlaceholder}
+                    value={commandQuery}
+                    onChange={(e) => setCommandQuery(e.target.value)}
+                    className="w-full bg-transparent border-none text-white focus:outline-none placeholder:text-neutral-600 text-lg md:text-xl font-medium"
+                  />
+                </div>
+                <div className="max-h-80 overflow-y-auto p-2">
+                  {filteredCommands.length === 0 ? (
+                    <div className="text-center py-10 text-neutral-500 text-sm">{t.cmdEmpty}</div>
+                  ) : (
+                    filteredCommands.map((cmd) => (
+                      <button
+                        key={cmd.id}
+                        onClick={cmd.action}
+                        className="w-full text-left flex items-center px-4 py-3.5 hover:bg-indigo-600/20 hover:text-indigo-400 text-neutral-300 rounded-xl transition-colors group cursor-pointer focus:outline-none focus:bg-indigo-600/20 focus:text-indigo-400 mb-1"
+                      >
+                        <div className="mr-4 text-neutral-500 group-hover:text-indigo-400 group-focus:text-indigo-400 transition-colors">
+                          {cmd.icon}
+                        </div>
+                        <span className="font-semibold text-sm">{cmd.label}</span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
