@@ -538,6 +538,31 @@ export default function App() {
                </div>
             </a>
 
+            {/* CV Edit - New Project */}
+            <a href="https://cvedit.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex-1 rounded-3xl bg-neutral-900 overflow-hidden relative shadow-2xl group cursor-pointer border border-neutral-800 flex flex-col md:flex-row-reverse">
+               <div className="md:w-3/5 h-64 md:h-auto relative overflow-hidden">
+                 <div className="absolute inset-0 bg-indigo-600/10 mix-blend-overlay z-10" />
+                 <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style={{ 
+                    backgroundImage: 'url("https://images.unsplash.com/photo-1586281380117-5a60ae2050cc?auto=format&fit=crop&q=80")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                 }} />
+               </div>
+               
+               <div className="md:w-2/5 p-8 flex flex-col justify-center relative bg-gradient-to-l from-neutral-900 to-neutral-950">
+                  <div className="text-indigo-400 text-[10px] font-bold uppercase tracking-widest mb-3">
+                    {t.cvEditSub}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-indigo-400 transition-colors uppercase tracking-tight">{t.cvEditTitle}</h3>
+                  <p className="text-sm text-neutral-400 mb-8 leading-relaxed">
+                    {t.cvEditDesc}
+                  </p>
+                  <div className="inline-flex items-center gap-2 text-indigo-400 font-medium group-hover:text-white transition-colors">
+                    {t.viewLiveSite} <ExternalLink className="w-4 h-4" />
+                  </div>
+               </div>
+            </a>
+
             {/* Android App Card - Ağ Analizi */}
             <div className="rounded-3xl bg-neutral-900 overflow-hidden relative shadow-2xl group border border-neutral-800 flex flex-col md:flex-row-reverse">
                {/* Mobile App Visual Section */}
@@ -667,12 +692,12 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex gap-8">
             <div className="flex flex-col">
-              <span className="text-[10px] text-neutral-500 uppercase tracking-widest mb-1">Analiz Edilen Projeler</span>
+              <span className="text-[10px] text-neutral-500 uppercase tracking-widest mb-1">{t.footerStatsProjects}</span>
               <span className="text-lg font-bold text-white">124+</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] text-neutral-500 uppercase tracking-widest mb-1">Yayınlanan Uygulamalar</span>
-              <span className="text-lg font-bold text-white">48</span>
+              <span className="text-[10px] text-neutral-500 uppercase tracking-widest mb-1">{t.footerStatsApps}</span>
+              <span className="text-lg font-bold text-white">48+</span>
             </div>
           </div>
           
@@ -680,8 +705,8 @@ export default function App() {
               <a href="https://github.com/MYKSoft" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors mb-3">
                  <Github className="w-5 h-5" /> Code on GitHub
               </a>
-              <p className="text-sm text-neutral-500 mb-1">&copy; {new Date().getFullYear()} MYK Soft. Tüm hakları saklıdır.</p>
-              <p className="text-[11px] text-indigo-500 italic">Sınırları zorlayan bireysel kodlama.</p>
+              <p className="text-sm text-neutral-500 mb-1">&copy; {new Date().getFullYear()} MYK Soft. All rights reserved.</p>
+              <p className="text-[11px] text-indigo-500 italic">Exploring the boundaries of code.</p>
             </div>
         </div>
       </footer>
