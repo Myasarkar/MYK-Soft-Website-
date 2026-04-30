@@ -563,6 +563,31 @@ export default function App() {
                </div>
             </a>
 
+            {/* Umut Döner - New Project */}
+            <a href="https://umutdoner.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex-1 rounded-3xl bg-neutral-900 overflow-hidden relative shadow-2xl group cursor-pointer border border-neutral-800 flex flex-col md:flex-row">
+               <div className="md:w-3/5 h-64 md:h-auto relative overflow-hidden">
+                 <div className="absolute inset-0 bg-orange-600/10 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0" />
+                 <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style={{ 
+                    backgroundImage: 'url("https://raw.githubusercontent.com/Myasarkar/Umut-D-ner-/refs/heads/main/src/assets/arkaplan1.jpeg")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                 }} />
+               </div>
+               
+               <div className="md:w-2/5 p-8 flex flex-col justify-center relative bg-gradient-to-r from-neutral-900 to-neutral-950">
+                  <div className="text-orange-400 text-[10px] font-bold uppercase tracking-widest mb-3">
+                    {t.umutDonerSub}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-orange-400 transition-colors">{t.umutDonerTitle}</h3>
+                  <p className="text-sm text-neutral-400 mb-8 leading-relaxed">
+                    {t.umutDonerDesc}
+                  </p>
+                  <div className="inline-flex items-center gap-2 text-orange-400 font-medium group-hover:text-white transition-colors">
+                    {t.viewLiveSite} <ExternalLink className="w-4 h-4" />
+                  </div>
+               </div>
+            </a>
+
             {/* Android App Card - Ağ Analizi */}
             <div className="rounded-3xl bg-neutral-900 overflow-hidden relative shadow-2xl group border border-neutral-800 flex flex-col md:flex-row-reverse">
                {/* Mobile App Visual Section */}
