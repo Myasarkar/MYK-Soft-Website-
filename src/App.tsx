@@ -665,7 +665,7 @@ export default function App() {
                     </button>
                   </div>
 
-                  <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-full font-bold text-sm transition-colors border border-cyan-500/20 w-fit mt-auto shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                  <a href="https://play.google.com/store/apps/details?id=com.myksoft.aganalizi" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-full font-bold text-sm transition-colors border border-cyan-500/20 w-fit mt-auto shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                      {t.googlePlay} <ExternalLink className="w-4 h-4" />
                   </a>
                </div>
