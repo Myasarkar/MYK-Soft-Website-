@@ -633,7 +633,7 @@ export default function App() {
                        </div>
                      </div>
                      <div>
-                       <h3 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-1">{t.networkAppTitle} <span className="hidden sm:inline-block text-sm font-normal text-neutral-400">({t.earlyAccess})</span></h3>
+                       <h3 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-1">{t.networkAppTitle}</h3>
                        <p className="text-sm text-cyan-400 font-medium tracking-wide">MYK Soft</p>
                      </div>
                   </div>
